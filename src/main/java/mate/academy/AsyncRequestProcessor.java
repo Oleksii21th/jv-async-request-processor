@@ -16,6 +16,11 @@ public class AsyncRequestProcessor {
     }
 
     public CompletableFuture<UserData> processRequest(String userId) {
+        UserData cached = cache.get(userId);
+        if (cached != null) {
+            return CompletableFuture.completedFuture(cached);
+        }
+
         return CompletableFuture.supplyAsync(() -> {
             try {
                 Thread.sleep(1000);
@@ -24,7 +29,8 @@ public class AsyncRequestProcessor {
                 throw new RuntimeException("Task interrupted", e);
             }
 
-            return cache.computeIfAbsent(userId, id -> new UserData(id, DETAILS + id));
+            return cache.computeIfAbsent(userId,
+                    id -> new UserData(id, DETAILS + id));
         }, executor);
     }
 }
