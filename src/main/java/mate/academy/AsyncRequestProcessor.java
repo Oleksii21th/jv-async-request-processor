@@ -25,7 +25,6 @@ public class AsyncRequestProcessor {
                                 throw new RuntimeException("Task interrupted", e);
                             }
                             return new UserData(id, DETAILS + id);
-                        })
-                , executor);
+                        }), executor);
     }
 }
